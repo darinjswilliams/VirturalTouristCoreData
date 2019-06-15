@@ -52,29 +52,35 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
         
         //MARK CHECK PIN FOR STATE
         print("here is the value \(sender.state.rawValue)")
+       
+        let location = sender.location(in: mapView)
         
-        if sender.state == .began {
-            let location = sender.location(in: mapView)
+        travelCoordinates = mapView.convert(location, toCoordinateFrom: self.mapView)
+   
+        // Add annotation:
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = travelCoordinates!
+        
+        let long = travelCoordinates!.longitude
+        let lat = travelCoordinates!.latitude
+        
+        annotation.title = String(lat)+String(long)
+
+        
+        let region = MKCoordinateRegion(center: travelCoordinates!, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        
+        mapView.setRegion(region, animated: true)
+
+         if sender.state == .began {
             
-            
-            travelCoordinates = mapView.convert(location, toCoordinateFrom: mapView)
-            
-            // Add annotation:
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = travelCoordinates!
-            
-            let long = travelCoordinates?.longitude
-            let lat = travelCoordinates?.latitude
-            
-            // Save this PIN to CoreData
-            savePinLocationToCoreData(longitude: long!, latitude: lat!)
-            
-            annotation.title = String(lat!)+String(long!)
             mapView.addAnnotation(annotation)
             
-            let region = MKCoordinateRegion(center: travelCoordinates!, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-            mapView.setRegion(region, animated: true)
-        } 
+            
+         } else if sender.state == .ended {
+            
+             savePinLocationToCoreData(longitude: long, latitude: lat)
+        }
+           
     }
     
     
@@ -145,25 +151,30 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         
+        
         //Get current Coordinates
         self.travelCoordinates = view.annotation?.coordinate
+        print("mapView : \(self.travelCoordinates)")
     
-        //fetch current location data
-        let fetchRequest : NSFetchRequest<Pin> = Pin.fetchRequest()
-        
-        //Use predicate to search
-        fetchRequest.predicate = NSPredicate(format: "coordinates == %@", coordinatesData)
-        if let result = try?  dataController.viewContext.fetch(fetchRequest)
-        {
-            if(result.count > 0)
-            {
-                self.pins = [result[0]]
-            }
-            else
-            {
-                return
-            }
-        }
+//        //fetch current location data
+//        let fetchRequest : NSFetchRequest<Pin> = Pin.fetchRequest()
+//
+//        //Use predicate to search
+//        fetchRequest.predicate = NSPredicate(format: "coordinates == %@", coordinatesData)
+//        print("CoordinatesData \(coordinatesData)")
+//
+//        if let result = try?  dataController.viewContext.fetch(fetchRequest)
+//        {
+//            if(result.count > 0)
+//            {
+//                print("CoordinateData: \(coordinatesData)")
+//                self.pins = [result[0]]
+//            }
+//            else
+//            {
+//                return
+//            }
+//        }
         
         self.performSegue(withIdentifier: "showPhotos", sender: self)
         
@@ -194,17 +205,23 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
             return
         }
         
-        print("TravlCrtl..Coordinates \(self.travelCoordinates)")
-        print("count in pins \(pins.count)")
-        
-        for pin in pins {
-            if pin.latitude == self.travelCoordinates?.latitude && pin.longitude == self.travelCoordinates?.longitude {
+        print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.latitude))")
+            print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.longitude))")
+//        print("count in pins \(pins.count)")
+//
+//
+//
+//        for pin in pins {
+//            if pin.latitude == self.travelCoordinates!.latitude && pin.longitude == self.travelCoordinates!.longitude {
+//
+//                print("latitude: \(pin.latitude)")
+//                print("longitude: \(pin.longitude)")
                 controllerViewDest.coordinates = self.travelCoordinates
-                controllerViewDest.pin = pin
+//                controllerViewDest.pin = pin
                 controllerViewDest.dataController = self.dataController
             }
-        }
-    }
+//        }
+//    }
     
     
 

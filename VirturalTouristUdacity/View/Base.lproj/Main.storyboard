@@ -76,7 +76,7 @@
                                     <constraint firstAttribute="height" constant="190" id="696-rc-Tg0"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="delegate" destination="Md5-5M-L79" id="iFj-b8-nK1"/>
+                                    <outlet property="delegate" destination="Md5-5M-L79" id="p8L-ZW-oQk"/>
                                 </connections>
                             </mapView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LaA-0l-uhf">
@@ -87,10 +87,10 @@
                                             <rect key="frame" x="16" y="7" width="343" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="New Collection"/>
-                                            <connections>
-                                                <action selector="newCollectionButtonPressed:" destination="Md5-5M-L79" eventType="touchUpInside" id="V2h-ay-3gN"/>
-                                            </connections>
                                         </button>
+                                        <connections>
+                                            <action selector="newCollectionButton:" destination="Md5-5M-L79" id="hjQ-lS-7DQ"/>
+                                        </connections>
                                     </barButtonItem>
                                 </items>
                             </toolbar>
@@ -136,8 +136,8 @@
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
-                                    <outlet property="dataSource" destination="Md5-5M-L79" id="EYe-QF-74T"/>
-                                    <outlet property="delegate" destination="Md5-5M-L79" id="Fhd-Py-LXY"/>
+                                    <outlet property="dataSource" destination="Md5-5M-L79" id="ior-5R-bUM"/>
+                                    <outlet property="delegate" destination="Md5-5M-L79" id="wAT-qL-LJS"/>
                                 </connections>
                             </collectionView>
                         </subviews>
@@ -164,8 +164,8 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="collectionView" destination="b4a-C6-wDU" id="Xw0-PT-wZp"/>
-                        <outlet property="flowLayOut" destination="c5E-fp-70M" id="RgW-MW-9CA"/>
+                        <outlet property="collectionView" destination="b4a-C6-wDU" id="De1-SU-hHf"/>
+                        <outlet property="flowLayOut" destination="c5E-fp-70M" id="EoW-U3-vVe"/>
                         <outlet property="mapView" destination="MvC-YB-7FS" id="0YI-ay-dD1"/>
                         <outlet property="newCollection" destination="AGa-eA-GoZ" id="m3M-mG-0Un"/>
                     </connections>
