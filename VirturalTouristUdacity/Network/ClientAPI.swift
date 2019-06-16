@@ -90,8 +90,8 @@ class func taskForGETRequest<ResponseType: Decodable>(url: URL,response: Respons
 }
 
 
-class func taskDownLoadPhotosData(url: URL, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-    
+class func taskDownLoadPhotosData(url: URL, completionHandler: @escaping (Data?, Error?) -> Void) {
+
     let downloadTask = URLSession.shared.dataTask(with: url, completionHandler: {
         (data, response, error) in
         // guard there is data
@@ -103,7 +103,8 @@ class func taskDownLoadPhotosData(url: URL, completionHandler: @escaping (UIImag
         }
         
         let downloadedImage: UIImage = UIImage(data: data)!
-        completionHandler(downloadedImage, nil)
+        let convertedImageToBinary = UIImage.pngData(downloadedImage)
+        completionHandler(convertedImageToBinary(), nil)
     })
     downloadTask.resume()
     

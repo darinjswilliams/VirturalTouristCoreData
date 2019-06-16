@@ -10,51 +10,63 @@ import UIKit
 import CoreData
 import MapKit
 
-class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate 
+class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource
 {
-
+    
     
     @IBOutlet weak var newCollection: UIButton!
-  
+    
     @IBOutlet weak var mapView: MKMapView!
     
     @IBOutlet weak var collectionView: UICollectionView!
-  
+    
     @IBOutlet weak var flowLayOut: UICollectionViewFlowLayout!
- 
+    
     
     var coordinates: CLLocationCoordinate2D?
-    var pin: Pin!
-
+    var pin: Pin?
+    
     var dataController:DataController?
     
-     var fetchResultsController : NSFetchedResultsController<Photo>!
+    var fetchResultsController : NSFetchedResultsController<Photo>!
     
     private var blockOperation = BlockOperation()
- 
     
+    var imageArray: [Data] = []
+    var  photoArray:  [Photo] = []
     var page = 1
     var pages =  0
-
+    var  existingPin : Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-       
+        
+       initializeMapView()
+       LoadingViewActivity.show(mapView, loadingText: "Loading")
+       setupFetchedResultsControllerAndGetPhotos()
+      
+        print("Coordinates \(String(describing: self.coordinates))")
+        print("Pin \(String(describing: self.pin))")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
-        print("Coordinates \(String(describing: coordinates))")
-        print("Pin \(String(describing: pin))")
-        self.initializeMapView()
         
-    
-        setupFetchedResultsControllerAndGetPhotos()
+     
         
-        callParseFlickrApi(url: EndPoints.getAuthentication(coordinates!.latitude, coordinates!.longitude).url)
         
-
+        if existingPin {
+            print("reload data")
+            
+            if let indexPath = collectionView.indexPathsForSelectedItems {
+                collectionView.reloadItems(at: indexPath)
+            }
+            
+        } else {
+            
+            callParseFlickrApi(url: EndPoints.getAuthentication(coordinates!.latitude, coordinates!.longitude).url)
+            
+        }
     }
     
     //MARK - TEAR DOWN FETCH RESULT CONTROLLER
@@ -62,7 +74,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         super.viewDidDisappear(animated)
         
     }
-
+    
     //Mark New Collection Button
     @IBAction func newCollectionButton(_ sender: UIBarButtonItem) {
         print("New Collection")
@@ -71,7 +83,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     //MARK Back button
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
         
-          self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     
@@ -88,42 +100,44 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
             return
         }
         
-            self.pages = Int(photos.photos.pages)
-            self.saveImagesToCoreData(photos: photos)
+        self.pages = Int(photos.photos.pages)
+        self.saveImagesToCoreData(photos: photos )
     }
     
     
     //MARK Save Image  to Core Data as Binary
     func saveImagesToCoreData(photos:FlickerResponse?) {
         
-        
-        for image in (photos?.photos.photo)! {
+         LoadingViewActivity.hide()
+          for image in (photos?.photos.photo)! {
+            
             let photo = Photo(context: dataController!.viewContext)
             
-            
-            photo.photoURL = EndPoints.getImageUrl(image.farm, image.server, image.id, image.secret).stringValue
-            
+            photo.pin = self.pin
+           
             ClientAPI.taskDownLoadPhotosData(url: EndPoints.getImageUrl(image.farm, image.server, image.id, image.secret).url) { (response, error) in
+        
+                guard let response = response else {
+                    return
+                }
                 
-                photo.images = (response?.pngData()) as Data?
-                
-            }
-//            DispatchQueue.main.async {
-//
-            do{
-                try self.dataController!.viewContext.save()
-                print("Savng to Core Data")
-
-            } catch  let error {
-                print("Couldn't save to Core Data \(error.localizedDescription)")
-            }
-//        }
+           photo.images = response
+          print("saveImages to core daa")
+         }
+        
+        do {
+            try dataController?.viewContext.save()
+        } catch let error {
+            
+            print("saveImages: \(error.localizedDescription)")
         }
-        
-        collectionView.reloadData()
-        
+            
+        }
+      collectionView.reloadData()
     }
- 
+    
+  
+    
     //MARK Render  each pin's
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let annotationId = "pin"
@@ -143,7 +157,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return fetchResultsController.sections?.count ?? 0
+        return fetchResultsController.sections?.count ?? 1
     }
     
     //Mark NumberOfItemsInSection
@@ -154,7 +168,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     //Mark CellForItemAt
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         let aPhotoImage = fetchResultsController.object(at: indexPath)
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FlickrCollectionViewCell", for: indexPath) as! FlickrCollectionViewCell
@@ -163,16 +177,16 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
             do {
                 if let data = aPhotoImage.images as Data? {
                     cell.photoImage.image = UIImage(data: data)
-                  }
+                }
             } catch let error {
                 print("CellForItemAt \(error.localizedDescription)")
             }
             
         }
-
+        
         return cell
     }
-
+    
 }
 
 extension PhotoAlbumViewController {
@@ -181,7 +195,7 @@ extension PhotoAlbumViewController {
     fileprivate func initializeMapView() {
         
         let annotation = MKPointAnnotation()
-      
+        
         guard self.coordinates != nil else {
             print("coordinates are null")
             return
@@ -195,24 +209,23 @@ extension PhotoAlbumViewController {
         let region = MKCoordinateRegion(center: self.coordinates!, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         mapView.setRegion(region, animated: true)
     }
-
+    
 }
 
 
 //Mark Update Collection with Notifications
-extension PhotoAlbumViewController {
+extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     
     //MARK SETUP FETCH RESULTS CONTROLLER
     func setupFetchedResultsControllerAndGetPhotos() {
         // set up fetched results controller
         let fetchRequest : NSFetchRequest<Photo> = Photo.fetchRequest()
+        fetchRequest.sortDescriptors = []
+        fetchRequest.predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
         
-        let sortDescriptor = NSSortDescriptor(key: "images", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController!.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController!.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         fetchResultsController.delegate = self
-        
+
         do {
             try fetchResultsController.performFetch()
         } catch  let error {
@@ -220,32 +233,49 @@ extension PhotoAlbumViewController {
             fatalError(error.localizedDescription)
         }
         
+        
+        do {
+            
+            let totalCount = try fetchResultsController.managedObjectContext.count(for: fetchRequest)
+            
+            if totalCount > 0 {
+                print("total count \(totalCount)")
+                existingPin = true
+            } else {
+                existingPin = false
+            }
+            
+        } catch let error {
+            print("setupFetchedResultsControllerAndGetPhotos: \(error.localizedDescription)")
+        }
+
     }
     
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-
+        
         switch type {
         case .insert:
             guard let newIndexPath = newIndexPath else { break }
-
+            
             blockOperation.addExecutionBlock {
                 self.collectionView?.insertItems(at: [newIndexPath])
             }
         case .delete:
             guard let indexPath = indexPath else { break }
-
+            
             blockOperation.addExecutionBlock {
                 self.collectionView?.deleteItems(at: [indexPath])
             }
         case .update:
             guard let indexPath = indexPath else { break }
-
+            
             blockOperation.addExecutionBlock {
                 self.collectionView?.reloadItems(at: [indexPath])
             }
         case .move:
             guard let indexPath = indexPath, let newIndexPath = newIndexPath else { return }
-
+            
             blockOperation.addExecutionBlock {
                 self.collectionView?.moveItem(at: indexPath, to: newIndexPath)
             }

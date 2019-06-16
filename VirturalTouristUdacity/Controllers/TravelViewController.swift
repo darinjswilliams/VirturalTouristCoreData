@@ -25,6 +25,7 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     //MARK Define FetchResultController
     var fetchedResultsController : NSFetchedResultsController<Pin>!
     var pins : [Pin] = []
+    var pin : Pin!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,15 +57,24 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
         let location = sender.location(in: mapView)
         
         travelCoordinates = mapView.convert(location, toCoordinateFrom: self.mapView)
-   
+        
+        // Save pin to CoreData
+         pin = Pin(context: dataController.persistentContainer.viewContext)
+
+
         // Add annotation:
         let annotation = MKPointAnnotation()
         annotation.coordinate = travelCoordinates!
         
+        pin.latitude = travelCoordinates!.latitude
+        pin.longitude = travelCoordinates!.longitude
+        pin.coordinates = String(pin.latitude)+String(pin.longitude)
+        
         let long = travelCoordinates!.longitude
         let lat = travelCoordinates!.latitude
+//        let pin = Pin(context: dataController.persistentContainer.viewContext)
         
-        annotation.title = String(lat)+String(long)
+        annotation.title = String(pin.latitude)+String(pin.longitude)
 
         
         let region = MKCoordinateRegion(center: travelCoordinates!, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
@@ -78,7 +88,7 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
             
          } else if sender.state == .ended {
             
-             savePinLocationToCoreData(longitude: long, latitude: lat)
+            savePinLocationToCoreData(longitude: long, latitude: lat, pin: pin)
         }
            
     }
@@ -119,18 +129,18 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     }
     
     
-    func savePinLocationToCoreData(longitude: CLLocationDegrees, latitude: CLLocationDegrees){
+    func savePinLocationToCoreData(longitude: CLLocationDegrees, latitude: CLLocationDegrees, pin: Pin){
         
         do{
-            let pin = Pin(context: dataController.viewContext)
+            self.pin = Pin(context: dataController.persistentContainer.viewContext)
             pin.latitude  = latitude
             pin.longitude  = longitude
-            coordinatesData = String(latitude)+String(longitude)
-            pin.coordinates = coordinatesData
+            pin.coordinates = String(latitude)+String(longitude)
             print("TravelCtrl \(String(describing: pin.coordinates))")
             
             //MARK: When pins are dropped on the map, the pins are persisted as Pin instances in Core Data and the context is saved.
-            try dataController.viewContext.save()
+            try dataController.persistentContainer.viewContext.save()
+            pins.append(pin)
             print("Saving Pin to Core data")
         }
         catch let error
@@ -154,27 +164,8 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
         
         //Get current Coordinates
         self.travelCoordinates = view.annotation?.coordinate
-        print("mapView : \(self.travelCoordinates)")
+        print("mapView : \(String(describing: self.travelCoordinates))")
     
-//        //fetch current location data
-//        let fetchRequest : NSFetchRequest<Pin> = Pin.fetchRequest()
-//
-//        //Use predicate to search
-//        fetchRequest.predicate = NSPredicate(format: "coordinates == %@", coordinatesData)
-//        print("CoordinatesData \(coordinatesData)")
-//
-//        if let result = try?  dataController.viewContext.fetch(fetchRequest)
-//        {
-//            if(result.count > 0)
-//            {
-//                print("CoordinateData: \(coordinatesData)")
-//                self.pins = [result[0]]
-//            }
-//            else
-//            {
-//                return
-//            }
-//        }
         
         self.performSegue(withIdentifier: "showPhotos", sender: self)
         
@@ -207,22 +198,17 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
         
         print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.latitude))")
             print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.longitude))")
-//        print("count in pins \(pins.count)")
-//
-//
-//
-//        for pin in pins {
-//            if pin.latitude == self.travelCoordinates!.latitude && pin.longitude == self.travelCoordinates!.longitude {
-//
-//                print("latitude: \(pin.latitude)")
-//                print("longitude: \(pin.longitude)")
+        print("TravlCrl...Pin \(String(describing: pin))")
+
+        for pin in pins{
+            if pin.latitude == self.travelCoordinates?.latitude && pin.longitude == self.travelCoordinates?.longitude {
+                controllerViewDest.pin = pin
                 controllerViewDest.coordinates = self.travelCoordinates
-//                controllerViewDest.pin = pin
+        
                 controllerViewDest.dataController = self.dataController
             }
-//        }
-//    }
-    
-    
+
+        }
+    }
 
 }
