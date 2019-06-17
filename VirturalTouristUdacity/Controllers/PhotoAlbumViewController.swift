@@ -22,6 +22,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     @IBOutlet weak var flowLayOut: UICollectionViewFlowLayout!
     
+    @IBOutlet weak var noPhotoLabel: UILabel!
     
     var coordinates: CLLocationCoordinate2D?
     var pin: Pin?
@@ -57,6 +58,8 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         
         if existingPin {
             print("reload data")
+            
+            LoadingViewActivity.hide()
             
             if let indexPath = collectionView.indexPathsForSelectedItems {
                 collectionView.reloadItems(at: indexPath)
@@ -95,13 +98,26 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     func handleGetFlickerPhotos(photos:FlickerResponse?, error:Error?) {
         
-        guard let photos = photos else {
-            print("Unable to Download photos from Flicker \(String(describing: error))")
-            return
+//        guard let photos == nil else {
+//
+//            LoadingViewActivity.hide()
+//
+//            self.noPhotoLabel.text = "No Photos"
+//
+//            return
+//        }
+//
+        if photos?.photos.photo.count == 0 {
+            
+            LoadingViewActivity.hide()
+            
+            self.noPhotoLabel.text = "No Photos"
         }
         
-        self.pages = Int(photos.photos.pages)
-        self.saveImagesToCoreData(photos: photos )
+        
+        
+        self.pages = Int(photos!.photos.pages)
+        self.saveImagesToCoreData(photos: photos)
     }
     
     
@@ -154,7 +170,28 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         return pinView
     }
     
-    // MARK: - UICollectionViewDataSource
+    //MARK DELETE PHOTO FROM GCD IF TOUCHED
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // Remove from CoreData
+        let photoToDelete = fetchResultsController.object(at: indexPath)
+        
+        print("Delete photo")
+        dataController!.viewContext.delete(photoToDelete)
+        
+        do {
+            try dataController!.viewContext.save()
+        }
+        catch let error
+        {
+            print(error)
+        }
+        collectionView.reloadData()
+        return
+        
+    }
+    
+    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return fetchResultsController.sections?.count ?? 1
