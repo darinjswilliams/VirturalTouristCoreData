@@ -44,6 +44,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         
        initializeMapView()
        LoadingViewActivity.show(mapView, loadingText: "Loading")
+        self.newCollection.isEnabled = false
        setupFetchedResultsControllerAndGetPhotos()
       
         print("Coordinates \(String(describing: self.coordinates))")
@@ -54,10 +55,9 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         super.viewWillAppear(animated)
         
      
-        
-        
         if existingPin {
             print("reload data")
+            self.newCollection.isEnabled = true
             
             LoadingViewActivity.hide()
             
@@ -81,6 +81,8 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     //Mark New Collection Button
     @IBAction func newCollectionButton(_ sender: UIBarButtonItem) {
         print("New Collection")
+        // check the
+        
     }
     
     //MARK Back button
@@ -98,15 +100,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     func handleGetFlickerPhotos(photos:FlickerResponse?, error:Error?) {
         
-//        guard let photos == nil else {
-//
-//            LoadingViewActivity.hide()
-//
-//            self.noPhotoLabel.text = "No Photos"
-//
-//            return
-//        }
-//
+
         if photos?.photos.photo.count == 0 {
             
             LoadingViewActivity.hide()
@@ -149,11 +143,11 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         }
             
         }
+      self.newCollection.isEnabled = true
       collectionView.reloadData()
     }
     
   
-    
     //MARK Render  each pin's
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let annotationId = "pin"
@@ -192,7 +186,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     }
     
     
-    
+    //MARK NUMBER OF SECTIONS
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return fetchResultsController.sections?.count ?? 1
     }
