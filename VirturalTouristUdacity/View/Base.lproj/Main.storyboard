@@ -71,28 +71,25 @@
                                 </items>
                             </navigationBar>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="MvC-YB-7FS">
-                                <rect key="frame" x="0.0" y="64" width="375" height="190"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="190" id="696-rc-Tg0"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="64" width="375" height="141"/>
                                 <connections>
                                     <outlet property="delegate" destination="Md5-5M-L79" id="p8L-ZW-oQk"/>
                                 </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="b4a-C6-wDU">
-                                <rect key="frame" x="0.0" y="243" width="375" height="330"/>
+                                <rect key="frame" x="0.0" y="205" width="375" height="362"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="330" id="XaD-ON-uOD"/>
+                                    <constraint firstAttribute="height" constant="362" id="XaD-ON-uOD"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="c5E-fp-70M">
-                                    <size key="itemSize" width="108" height="101"/>
+                                    <size key="itemSize" width="84" height="73"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <label key="backgroundView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zoq-Lv-DgT">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="362"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="1" green="0.1660103369" blue="0.15261832910000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -100,18 +97,17 @@
                                 </label>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FlickrCollectionViewCell" id="4QG-RI-RSk" customClass="FlickrCollectionViewCell" customModule="VirturalTouristUdacity" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="108" height="101"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="84" height="73"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="108" height="101"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="84" height="73"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LCy-ob-fHU">
-                                                    <rect key="frame" x="0.0" y="0.0" width="108" height="101"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="84" height="73"/>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="PPZ-VE-K3d">
-                                                    <rect key="frame" x="36" y="32" width="37" height="37"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="PPZ-VE-K3d">
+                                                    <rect key="frame" x="20" y="16" width="37" height="37"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                         </view>
@@ -119,6 +115,10 @@
                                             <constraint firstAttribute="trailing" secondItem="LCy-ob-fHU" secondAttribute="trailing" id="Eji-Wb-dhe"/>
                                             <constraint firstAttribute="bottom" secondItem="LCy-ob-fHU" secondAttribute="bottom" id="Hn0-Oc-l9Q"/>
                                             <constraint firstItem="LCy-ob-fHU" firstAttribute="leading" secondItem="4QG-RI-RSk" secondAttribute="leading" id="S3X-hZ-bAh"/>
+                                            <constraint firstItem="LCy-ob-fHU" firstAttribute="leading" secondItem="4QG-RI-RSk" secondAttribute="leading" id="X3w-Jb-RXq"/>
+                                            <constraint firstItem="PPZ-VE-K3d" firstAttribute="centerY" secondItem="LCy-ob-fHU" secondAttribute="centerY" constant="-2" id="p6M-jk-m3v"/>
+                                            <constraint firstItem="PPZ-VE-K3d" firstAttribute="centerX" secondItem="LCy-ob-fHU" secondAttribute="centerX" constant="-3.5" id="p71-1s-ejl"/>
+                                            <constraint firstItem="LCy-ob-fHU" firstAttribute="top" secondItem="4QG-RI-RSk" secondAttribute="top" id="qay-9l-FNE"/>
                                             <constraint firstItem="LCy-ob-fHU" firstAttribute="top" secondItem="4QG-RI-RSk" secondAttribute="top" id="sTj-mP-dAN"/>
                                         </constraints>
                                         <connections>
@@ -133,8 +133,12 @@
                                 </connections>
                             </collectionView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FyG-Sz-oqs">
-                                <rect key="frame" x="0.0" y="579" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="573" width="375" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="0yc-n0-QCY"/>
+                                </constraints>
                                 <items>
+                                    <barButtonItem width="103" style="plain" systemItem="fixedSpace" id="F5m-Rv-1el"/>
                                     <barButtonItem title="New Collection" id="ziu-Kx-Xg5">
                                         <connections>
                                             <action selector="newCollectionButton:" destination="Md5-5M-L79" id="KoD-FD-Es4"/>
@@ -156,6 +160,7 @@
                             <constraint firstItem="FyG-Sz-oqs" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="ctD-kU-aN8"/>
                             <constraint firstItem="FyG-Sz-oqs" firstAttribute="leading" secondItem="Vv4-2x-3SA" secondAttribute="leading" id="dfa-oa-Tl2"/>
                             <constraint firstItem="Faj-m8-gU9" firstAttribute="top" secondItem="GqL-En-5Zb" secondAttribute="top" id="fur-CD-wdP"/>
+                            <constraint firstItem="b4a-C6-wDU" firstAttribute="top" secondItem="MvC-YB-7FS" secondAttribute="bottom" id="gDv-eT-foI"/>
                             <constraint firstItem="FyG-Sz-oqs" firstAttribute="leading" secondItem="Vv4-2x-3SA" secondAttribute="leading" id="hSq-Vj-b6K"/>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="trailing" secondItem="b4a-C6-wDU" secondAttribute="trailing" id="tP1-qw-2wk"/>
                             <constraint firstItem="Faj-m8-gU9" firstAttribute="leading" secondItem="GqL-En-5Zb" secondAttribute="leading" id="uM7-Ae-Rdh"/>

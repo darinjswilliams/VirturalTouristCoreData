@@ -33,11 +33,10 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     private var blockOperation = BlockOperation()
     
-    var imageArray: [Data] = []
-    var  photoArray:  [Photo] = []
-    var minimumPage  : Int32 = 1
     var maximumPages : Int32 = 1
     var  existingPin : Bool = false
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +54,14 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         super.viewWillAppear(animated)
         
      
+        let space:CGFloat = 2
+        let dimension = (view.frame.size.width - (2 * space)) / 3.0
+        let hdimention = (view.frame.size.height - (2 * space)) / 3.0
+        flowLayOut.minimumInteritemSpacing = space
+        flowLayOut.minimumLineSpacing = space
+        flowLayOut.itemSize = CGSize(width: dimension, height: hdimention)
+        
+        
         if existingPin {
             print("reload data")
             self.buttonNewCollection.isEnabled = true
@@ -138,8 +145,6 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
             
             self.noPhotoLabel.text = "No Photos"
         }
-        
-        
         
         self.maximumPages = Int32(Int(photos!.photos.pages))
         self.saveImagesToCoreData(photos: photos)
