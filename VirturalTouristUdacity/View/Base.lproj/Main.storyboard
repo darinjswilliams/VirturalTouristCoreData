@@ -79,23 +79,8 @@
                                     <outlet property="delegate" destination="Md5-5M-L79" id="p8L-ZW-oQk"/>
                                 </connections>
                             </mapView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LaA-0l-uhf">
-                                <rect key="frame" x="0.0" y="579" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem title="New Collection" style="plain" id="aFf-Ik-waF">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="AGa-eA-GoZ">
-                                            <rect key="frame" x="16" y="7" width="343" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="New Collection"/>
-                                        </button>
-                                        <connections>
-                                            <action selector="newCollectionButton:" destination="Md5-5M-L79" id="hjQ-lS-7DQ"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="b4a-C6-wDU">
-                                <rect key="frame" x="0.0" y="249" width="375" height="330"/>
+                                <rect key="frame" x="0.0" y="243" width="375" height="330"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="330" id="XaD-ON-uOD"/>
@@ -147,34 +132,43 @@
                                     <outlet property="delegate" destination="Md5-5M-L79" id="wAT-qL-LJS"/>
                                 </connections>
                             </collectionView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FyG-Sz-oqs">
+                                <rect key="frame" x="0.0" y="579" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="New Collection" id="ziu-Kx-Xg5">
+                                        <connections>
+                                            <action selector="newCollectionButton:" destination="Md5-5M-L79" id="KoD-FD-Es4"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="leading" secondItem="b4a-C6-wDU" secondAttribute="leading" id="3Eo-oZ-kdn"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="leading" secondItem="GqL-En-5Zb" secondAttribute="leading" id="6L9-BJ-K4W"/>
+                            <constraint firstAttribute="bottom" secondItem="FyG-Sz-oqs" secondAttribute="bottom" constant="44" id="4dy-zM-mhx"/>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="88Q-R9-sTb"/>
                             <constraint firstItem="Faj-m8-gU9" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="BfV-NP-9Qz"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="top" secondItem="b4a-C6-wDU" secondAttribute="bottom" id="IDk-6y-IdJ"/>
+                            <constraint firstItem="FyG-Sz-oqs" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="ByS-Co-tM9"/>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="leading" secondItem="GqL-En-5Zb" secondAttribute="leading" id="OFZ-fb-W9H"/>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="top" secondItem="Faj-m8-gU9" secondAttribute="bottom" id="Uf6-53-vGh"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="top" secondItem="b4a-C6-wDU" secondAttribute="bottom" id="fkh-1Z-I24"/>
+                            <constraint firstItem="FyG-Sz-oqs" firstAttribute="top" secondItem="b4a-C6-wDU" secondAttribute="bottom" constant="6" id="bCj-Dv-5X6"/>
+                            <constraint firstItem="FyG-Sz-oqs" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="ctD-kU-aN8"/>
+                            <constraint firstItem="FyG-Sz-oqs" firstAttribute="leading" secondItem="Vv4-2x-3SA" secondAttribute="leading" id="dfa-oa-Tl2"/>
                             <constraint firstItem="Faj-m8-gU9" firstAttribute="top" secondItem="GqL-En-5Zb" secondAttribute="top" id="fur-CD-wdP"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="bottom" secondItem="GqL-En-5Zb" secondAttribute="bottom" id="m7l-4p-ifg"/>
-                            <constraint firstItem="MvC-YB-7FS" firstAttribute="leading" secondItem="LaA-0l-uhf" secondAttribute="leading" id="oSf-zT-LQQ"/>
+                            <constraint firstItem="FyG-Sz-oqs" firstAttribute="leading" secondItem="Vv4-2x-3SA" secondAttribute="leading" id="hSq-Vj-b6K"/>
                             <constraint firstItem="MvC-YB-7FS" firstAttribute="trailing" secondItem="b4a-C6-wDU" secondAttribute="trailing" id="tP1-qw-2wk"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="bottom" secondItem="GqL-En-5Zb" secondAttribute="bottom" id="tTy-NR-lQg"/>
                             <constraint firstItem="Faj-m8-gU9" firstAttribute="leading" secondItem="GqL-En-5Zb" secondAttribute="leading" id="uM7-Ae-Rdh"/>
-                            <constraint firstItem="LaA-0l-uhf" firstAttribute="trailing" secondItem="GqL-En-5Zb" secondAttribute="trailing" id="yo6-s1-ItJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="GqL-En-5Zb"/>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="buttonNewCollection" destination="ziu-Kx-Xg5" id="IvI-7M-ASC"/>
                         <outlet property="collectionView" destination="b4a-C6-wDU" id="De1-SU-hHf"/>
                         <outlet property="flowLayOut" destination="c5E-fp-70M" id="EoW-U3-vVe"/>
                         <outlet property="mapView" destination="MvC-YB-7FS" id="0YI-ay-dD1"/>
-                        <outlet property="newCollection" destination="AGa-eA-GoZ" id="m3M-mG-0Un"/>
                         <outlet property="noPhotoLabel" destination="zoq-Lv-DgT" id="VqF-aC-6Xj"/>
                     </connections>
                 </viewController>

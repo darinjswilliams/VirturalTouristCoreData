@@ -14,7 +14,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
 {
     
     
-    @IBOutlet weak var newCollection: UIButton!
+    @IBOutlet weak var buttonNewCollection: UIBarButtonItem!
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -35,8 +35,8 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     var imageArray: [Data] = []
     var  photoArray:  [Photo] = []
-    var page = 1
-    var pages =  0
+    var minimumPage  : Int32 = 1
+    var maximumPages : Int32 = 1
     var  existingPin : Bool = false
     
     override func viewDidLoad() {
@@ -44,7 +44,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         
        initializeMapView()
        LoadingViewActivity.show(mapView, loadingText: "Loading")
-        self.newCollection.isEnabled = false
+        self.buttonNewCollection.isEnabled = false
        setupFetchedResultsControllerAndGetPhotos()
       
         print("Coordinates \(String(describing: self.coordinates))")
@@ -57,7 +57,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
      
         if existingPin {
             print("reload data")
-            self.newCollection.isEnabled = true
+            self.buttonNewCollection.isEnabled = true
             
             LoadingViewActivity.hide()
             
@@ -79,9 +79,40 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     }
     
     //Mark New Collection Button
+  
     @IBAction func newCollectionButton(_ sender: UIBarButtonItem) {
-        print("New Collection")
-        // check the
+        print("new Button")
+        
+
+        print("Here is the pin \(String(describing: self.pin?.pages))")
+        
+        //Lets get total pages from pin coming from photos
+        guard let pgnum = self.pin?.pages else {
+            print("pages is null")
+            return
+        }
+        
+        //Generate random number
+        let randomPageNumber =  Int(arc4random_uniform(UInt32(pgnum)))
+        //remove pictures from core data
+        print("Here is the random page number generated \(randomPageNumber)");
+        
+
+        //Remove all photos from GCD
+        let photoSet = self.pin?.photo
+        
+        //MARK DELETE ALL PHOTOS FROM GCD
+        print("PHOTOS IN PHOTOTSET \(String(describing: photoSet?.count))")
+        for photo in photoSet! {
+            dataController!.viewContext.delete(photo as! NSManagedObject)
+              print("photo deleted")
+        }
+        
+        //get new picture
+          callParseFlickrApi(url: EndPoints.getPhotos(randomPageNumber,coordinates!.latitude, coordinates!.longitude).url)
+        
+        //reload tableview
+        collectionView.reloadData()
         
     }
     
@@ -110,7 +141,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         
         
         
-        self.pages = Int(photos!.photos.pages)
+        self.maximumPages = Int32(Int(photos!.photos.pages))
         self.saveImagesToCoreData(photos: photos)
     }
     
@@ -118,12 +149,16 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     //MARK Save Image  to Core Data as Binary
     func saveImagesToCoreData(photos:FlickerResponse?) {
         
+        self.pin?.pages  = self.maximumPages
+        
          LoadingViewActivity.hide()
+        
           for image in (photos?.photos.photo)! {
             
             let photo = Photo(context: dataController!.viewContext)
             
             photo.pin = self.pin
+            
            
             ClientAPI.taskDownLoadPhotosData(url: EndPoints.getImageUrl(image.farm, image.server, image.id, image.secret).url) { (response, error) in
         
@@ -143,7 +178,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         }
             
         }
-      self.newCollection.isEnabled = true
+      self.buttonNewCollection.isEnabled = true
       collectionView.reloadData()
     }
     

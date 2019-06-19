@@ -53,6 +53,7 @@
 		C896E32122AC431A00E13947 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		C896E32322AC4AB800E13947 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		C896E32522AC5F3100E13947 /* FlickrCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrCollectionViewCell.swift; sourceTree = "<group>"; };
+		C8BD9A7E22B9C028000F30FD /* VirturalTouristUdacity -2019-06-removed-url 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "VirturalTouristUdacity -2019-06-removed-url 2.xcdatamodel"; sourceTree = "<group>"; };
 		C8C2AB1422B58B72007D7636 /* VirturalTouristUdacity -2019-06-removed-url.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "VirturalTouristUdacity -2019-06-removed-url.xcdatamodel"; sourceTree = "<group>"; };
 		C8D18F0A22B6AE3600C94198 /* LoadingViewActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -547,10 +548,11 @@
 		C896E2F722AC357B00E13947 /* VirturalTouristUdacity.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C8BD9A7E22B9C028000F30FD /* VirturalTouristUdacity -2019-06-removed-url 2.xcdatamodel */,
 				C8C2AB1422B58B72007D7636 /* VirturalTouristUdacity -2019-06-removed-url.xcdatamodel */,
 				C896E2F822AC357B00E13947 /* VirturalTouristUdacity.xcdatamodel */,
 			);
-			currentVersion = C8C2AB1422B58B72007D7636 /* VirturalTouristUdacity -2019-06-removed-url.xcdatamodel */;
+			currentVersion = C8BD9A7E22B9C028000F30FD /* VirturalTouristUdacity -2019-06-removed-url 2.xcdatamodel */;
 			path = VirturalTouristUdacity.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
