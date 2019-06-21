@@ -108,6 +108,7 @@
                                                 </imageView>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="PPZ-VE-K3d">
                                                     <rect key="frame" x="20" y="16" width="37" height="37"/>
+                                                    <color key="color" red="1" green="0.1660103369" blue="0.15261832910000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                         </view>

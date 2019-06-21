@@ -34,11 +34,11 @@ enum EndPoints {
             return AuthenticationUtils.secret
             
         case .getAuthentication(let latitude, let longitude):
-            return EndPoints.loginBase.stringValue + EndPoints.apiKeyFlicker.stringValue + "&method=flickr.photos.search&format=json&tags=&accuracy=11&nojsoncallback=1&lat=\(latitude)&lon=\(longitude)"
+            return EndPoints.loginBase.stringValue + EndPoints.apiKeyFlicker.stringValue + "&method=flickr.photos.search&format=json&tags=&per_page=12&accuracy=11&nojsoncallback=1&lat=\(latitude)&lon=\(longitude)"
             
         case .getPhotos(let pageNo, let latitude, let longitude):
             return EndPoints.loginBase.stringValue + EndPoints.apiKeyFlicker.stringValue +
-            "&method=flickr.photos.search&format=json&tags=&per_page=20&page=\(pageNo)&accuracy=12&nojsoncallback=1&lat=\(latitude)&lon=\(longitude)&radius=6"
+            "&method=flickr.photos.search&format=json&tags=&per_page=12&page=\(pageNo)&accuracy=12&nojsoncallback=1&lat=\(latitude)&lon=\(longitude)&radius=6"
         case .getImageUrl(let farm, let serverID, let id, let secret):
             return  "https://farm\(farm).staticflickr.com/\(serverID)/\(id)_\(secret).jpg"
             

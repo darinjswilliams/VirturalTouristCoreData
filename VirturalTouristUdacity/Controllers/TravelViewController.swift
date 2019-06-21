@@ -1,3 +1,4 @@
+
 //
 //  TravelViewController.swift
 //  VirturalTouristUdacity
@@ -30,6 +31,10 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //MARK LETS GET PATH OR CORE DATA SQL LITE FILE TO VIEW 
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        print(paths[0])
+        
         // Do any additional setup after loading the view.
         setUpFetchResultController()
         
@@ -59,37 +64,37 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
         travelCoordinates = mapView.convert(location, toCoordinateFrom: self.mapView)
         
         // Save pin to CoreData
-         pin = Pin(context: dataController.persistentContainer.viewContext)
+        // COMMENTED OUT FOR 2ND REVIEW
+        //pin = Pin(context: dataController.persistentContainer.viewContext)
 
-
+    if sender.state != .began {
+         return
+        }
+        
         // Add annotation:
         let annotation = MKPointAnnotation()
         annotation.coordinate = travelCoordinates!
         
-        pin.latitude = travelCoordinates!.latitude
-        pin.longitude = travelCoordinates!.longitude
-        pin.coordinates = String(pin.latitude)+String(pin.longitude)
+//        pin.latitude = travelCoordinates!.latitude
+//        pin.longitude = travelCoordinates!.longitude
+//        pin.coordinates = String(pin.latitude)+String(pin.longitude)
         
         let long = travelCoordinates!.longitude
         let lat = travelCoordinates!.latitude
 //        let pin = Pin(context: dataController.persistentContainer.viewContext)
         
-        annotation.title = String(pin.latitude)+String(pin.longitude)
+        annotation.title = String(lat)+String(long)
 
         
         let region = MKCoordinateRegion(center: travelCoordinates!, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
-        mapView.setRegion(region, animated: true)
-
-         if sender.state == .began {
-            
+            mapView.setRegion(region, animated: true)
+        
             mapView.addAnnotation(annotation)
+        
             
-            
-         } else if sender.state == .ended {
-            
-            savePinLocationToCoreData(longitude: long, latitude: lat, pin: pin)
-        }
+            savePinLocationToCoreData(longitude: long, latitude: lat)
+       
            
     }
     
@@ -129,23 +134,23 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     }
     
     
-    func savePinLocationToCoreData(longitude: CLLocationDegrees, latitude: CLLocationDegrees, pin: Pin){
+    func savePinLocationToCoreData(longitude: CLLocationDegrees, latitude: CLLocationDegrees){
         
         do{
             self.pin = Pin(context: dataController.persistentContainer.viewContext)
             pin.latitude  = latitude
             pin.longitude  = longitude
             pin.coordinates = String(latitude)+String(longitude)
-            print("TravelCtrl \(String(describing: pin.coordinates))")
+            debugPrint("TravelCtrl \(String(describing: pin.coordinates))")
             
             //MARK: When pins are dropped on the map, the pins are persisted as Pin instances in Core Data and the context is saved.
             try dataController.persistentContainer.viewContext.save()
             pins.append(pin)
-            print("Saving Pin to Core data")
+            debugPrint("Saving Pin to Core data")
         }
         catch let error
         {
-            print(error)
+            debugPrint(error)
         }
     }
     
@@ -192,13 +197,13 @@ class TravelViewController: UIViewController, MKMapViewDelegate, UIGestureRecogn
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let controllerViewDest = segue.destination as?  PhotoAlbumViewController else {
-            print("Can not transition to photo album view controller")
+            debugPrint("Can not transition to photo album view controller")
             return
         }
         
-        print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.latitude))")
-            print("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.longitude))")
-        print("TravlCrl...Pin \(String(describing: pin))")
+       debugPrint("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.latitude))")
+           debugPrint("TravlCrtl..Coordinates \(String(describing: self.travelCoordinates?.longitude))")
+        debugPrint("TravlCrl...Pin \(String(describing: pin))")
 
         for pin in pins{
             if pin.latitude == self.travelCoordinates?.latitude && pin.longitude == self.travelCoordinates?.longitude {

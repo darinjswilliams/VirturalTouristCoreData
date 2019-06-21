@@ -102,8 +102,17 @@ class func taskDownLoadPhotosData(url: URL, completionHandler: @escaping (Data?,
             return
         }
         
-        let downloadedImage: UIImage = UIImage(data: data)!
-        let convertedImageToBinary = UIImage.pngData(downloadedImage)
+        let downloadedImage: UIImage? = UIImage(data: data)
+        
+        guard let safeDownLoadedImage = downloadedImage else {
+            // TODO: CompleteHandler can return error
+            completionHandler(nil, error)
+            
+            return
+        }
+        
+        
+        let convertedImageToBinary = UIImage.pngData(safeDownLoadedImage)
         completionHandler(convertedImageToBinary(), nil)
     })
     downloadTask.resume()

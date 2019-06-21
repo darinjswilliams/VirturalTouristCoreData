@@ -27,7 +27,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     var coordinates: CLLocationCoordinate2D?
     var pin: Pin?
     
-    var dataController:DataController?
+    var dataController:DataController!
     
     var fetchResultsController : NSFetchedResultsController<Photo>!
     
@@ -35,6 +35,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     
     var maximumPages : Int32 = 1
     var  existingPin : Bool = false
+    let per_page = 12
     
     
     
@@ -99,10 +100,17 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
             return
         }
         
-        //Generate random number
-        let randomPageNumber =  Int(arc4random_uniform(UInt32(pgnum)))
+        debugPrint("Value of pgnum \(pgnum)")
+        debugPrint("Value of maxinum page number \(self.maximumPages)")
+        
+        //MARK Generate random number
+        let randomPageNumber =  min(pgnum, Int32(40000/self.per_page))
+        
+        //MARK GENERATE ANOTHER RANDOM NUMBER BASED OFF THE RANDOM AMOUNT RETURN FORM FLICKR
+        let anotherNum = Int32.random(in: 1...randomPageNumber)
         //remove pictures from core data
-        print("Here is the random page number generated \(randomPageNumber)");
+        debugPrint("New Collection Button: Random Number Generated: \(randomPageNumber)");
+        debugPrint("True random generated number \(anotherNum)")
         
 
         //Remove all photos from GCD
@@ -116,10 +124,10 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
         }
         
         //get new picture
-          callParseFlickrApi(url: EndPoints.getPhotos(randomPageNumber,coordinates!.latitude, coordinates!.longitude).url)
+        callParseFlickrApi(url: EndPoints.getPhotos(Int(anotherNum),coordinates!.latitude, coordinates!.longitude).url)
         
         //reload tableview
-        collectionView.reloadData()
+//        collectionView.reloadData()
         
     }
     
@@ -146,7 +154,7 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
             self.noPhotoLabel.text = "No Photos"
         }
         
-        self.maximumPages = Int32(Int(photos!.photos.pages))
+        
         self.saveImagesToCoreData(photos: photos)
     }
     
@@ -154,6 +162,8 @@ class PhotoAlbumViewController: UIViewController,  MKMapViewDelegate, UICollecti
     //MARK Save Image  to Core Data as Binary
     func saveImagesToCoreData(photos:FlickerResponse?) {
         
+        //MARK LETS SAVE OFF TOTAL PAGES AMOUNT
+        self.maximumPages = Int32(Int(photos!.photos.pages))
         self.pin?.pages  = self.maximumPages
         
          LoadingViewActivity.hide()
@@ -294,7 +304,7 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
         fetchRequest.sortDescriptors = []
         fetchRequest.predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
         
-        fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController!.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         fetchResultsController.delegate = self
 
         do {
